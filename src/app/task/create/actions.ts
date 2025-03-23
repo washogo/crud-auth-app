@@ -26,5 +26,5 @@ export async function createTask(formData: FormData) {
   await prisma.task.create({ data });
 
   revalidatePath('/', 'layout');
-  redirect('/');
+  redirect('/task');
 }
