@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  status      String
+  deadline    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
+  // Userモデルとのリレーション（Task:User = 多:1）
+  author      User   @relation(fields: [authorId], references: [id])
+  authorId    String
+}
+
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // Taskモデルとのリレーション（User:Task = 1:多）
+  tasks     Task[]
+}
