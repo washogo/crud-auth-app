@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const fetchTasks = async (): Promise<Task[]> => {
-  const response = await fetch('http://localhost:3000/api/task');
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL!}/api/task`);
   return await response.json();
 };
 

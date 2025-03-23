@@ -18,7 +18,7 @@ const Row = ({ title, content }: { title: string; content: string }) => {
 };
 
 const fetchTask = async (id: string) => {
-  const response = await fetch(`http://localhost:3000/api/task/${id}`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL!}/api/task/${id}`);
   return await response.json();
 };
 
