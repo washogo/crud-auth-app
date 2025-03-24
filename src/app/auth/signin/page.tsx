@@ -1,7 +1,7 @@
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import PageTitle from '@/components/PageTitle';
-import { signin } from '../actions';
+import { signin } from './actions';
 
 export default function SigninPage() {
   return (

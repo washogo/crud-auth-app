@@ -1,7 +1,7 @@
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import PageTitle from '@/components/PageTitle';
-import { signup } from '../actions';
+import { signup } from './actions';
 
 // サインアップ画面
 export default function SignupPage() {
