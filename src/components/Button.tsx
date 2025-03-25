@@ -18,12 +18,13 @@ type ButtonProps = {
   children: React.ReactNode;
   type?: 'button' | 'submit' | 'reset';
   color?: 'primary' | 'secondary' | 'danger';
+  onClick?: () => void;
 };
 
 /** ボタン */
-export default function Button({ children, type = 'button', color }: ButtonProps) {
+export default function Button({ children, type = 'button', color, onClick }: ButtonProps) {
   return (
-    <button className={button({ color })} type={type}>
+    <button className={button({ color })} type={type} onClick={onClick}>
       {children}
     </button>
   );
