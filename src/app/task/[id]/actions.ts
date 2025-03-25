@@ -2,17 +2,11 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { createClient } from '@/utils/supabase/server';
 import { PrismaClient } from '@prisma/client';
 import { redirect } from 'next/navigation';
 
 /** タスク更新処理 */
 export async function updateTask(formData: FormData) {
-  const supabase = await createClient();
-
-  const { data: userData } = await supabase.auth.getUser();
-  if (!userData.user) throw new Error('ログインしてください');
-
   const data = {
     title: formData.get('title') as string,
     description: formData.get('description') as string,
@@ -29,4 +23,14 @@ export async function updateTask(formData: FormData) {
 
   revalidatePath('/', 'layout');
   redirect(`/task/${formData.get('id')}`);
+}
+
+/** タスク削除処理 */
+export async function deleteTask(id: string) {
+  const prisma = new PrismaClient();
+
+  await prisma.task.delete({ where: { id } });
+
+  revalidatePath('/', 'layout');
+  redirect('/task');
 }

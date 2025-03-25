@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Button from './Button';
 import { Task } from '@prisma/client';
 import Input from './Input';
-import { updateTask } from '@/app/task/[id]/actions';
+import { deleteTask, updateTask } from '@/app/task/[id]/actions';
 
 type TaskDetailProps = {
   id: string;
@@ -110,7 +110,7 @@ export default function TaskDetail({ id }: TaskDetailProps) {
               <Button color="secondary" onClick={() => setIsEditing((prevState) => !prevState)}>
                 編集
               </Button>
-              <Button color="danger">削除</Button>
+              <Button color="danger" onClick={() => deleteTask(task.id)}>削除</Button>
             </div>
           </div>
         ))}
