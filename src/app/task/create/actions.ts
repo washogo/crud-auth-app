@@ -2,12 +2,11 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-
 import { createClient } from '@/utils/supabase/server';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 /** タスク作成処理 */
-export async function createTask(formData: FormData) {
+export async function createTask(_: { code: string; message: string }, formData: FormData) {
   const supabase = await createClient();
 
   const { data: userData } = await supabase.auth.getUser();
@@ -23,7 +22,17 @@ export async function createTask(formData: FormData) {
 
   const prisma = new PrismaClient();
 
-  await prisma.task.create({ data });
+  try {
+    await prisma.task.create({ data });
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return {
+        code: e.code,
+        message: e.message,
+      };
+    }
+    throw e;
+  }
 
   revalidatePath('/', 'layout');
   redirect('/task');

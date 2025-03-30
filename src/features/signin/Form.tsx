@@ -1,8 +1,8 @@
 'use client';
 
 import { signin } from '@/app/auth/signin/actions';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
+import Button from '@/components/Button';
+import Input from '@/components/Input';
 import { useActionState } from 'react';
 
 /** サインイン用フォーム */
