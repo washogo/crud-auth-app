@@ -5,7 +5,7 @@ import Input from '@/components/Input';
 import Button from '@/components/Button';
 import { createTask } from '@/app/task/create/actions';
 
-/** サインアップ機能用フォーム */
+/** タスク作成機能用フォーム */
 export default function Form() {
   const [state, formAction, pending] = useActionState(createTask, { code: '', message: '' });
   return (

@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Button from '../../../components/Button';
+import { startTransition, useActionState, useEffect, useState } from 'react';
 import { Task } from '@prisma/client';
-import Input from '../../../components/Input';
+import Button from '@/components/Button';
+import Input from '@/components/Input';
 import { deleteTask, updateTask } from '@/app/task/[id]/actions';
 
 type TaskDetailProps = {
@@ -28,6 +28,8 @@ const fetchTask = async (id: string) => {
 export default function TaskDetail({ id }: TaskDetailProps) {
   const [task, setTask] = useState<Task | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [updateState, updateFormAction, updatePending] = useActionState(updateTask, { code: '', message: '' });
+  const [deleteState, deleteFormAction, deletePending] = useActionState(deleteTask, { code: '', message: '' });
 
   useEffect(() => {
     fetchTask(id)
@@ -35,10 +37,20 @@ export default function TaskDetail({ id }: TaskDetailProps) {
       .catch((error) => console.error(error));
   }, [id]);
 
+  // タスク削除処理
+  const handleDelete = (taskId: string) => {
+    startTransition(() => {
+      deleteFormAction(taskId);
+    });
+  };
+
   return (
     <>
       {(task && isEditing && (
-        <form className="flex flex-col gap-5" action={updateTask}>
+        <form className="flex flex-col gap-5" action={updateFormAction}>
+          {updateState.code && updateState.message && (
+            <p className="text-red-500">{`コード：${updateState.code}、メッセージ：${updateState.message}`}</p>
+          )}
           <input type="hidden" name="id" value={id} />
           <Input
             label="タイトル"
@@ -93,8 +105,14 @@ export default function TaskDetail({ id }: TaskDetailProps) {
             />
           </div>
           <div className="flex flex-row gap-3">
-            <Button type="submit">更新</Button>
-            <Button color="secondary" onClick={() => setIsEditing((prevState) => !prevState)}>
+            <Button type="submit" isDisabled={updatePending}>
+              更新
+            </Button>
+            <Button
+              color="secondary"
+              onClick={() => setIsEditing((prevState) => !prevState)}
+              isDisabled={updatePending}
+            >
               キャンセル
             </Button>
           </div>
@@ -102,6 +120,9 @@ export default function TaskDetail({ id }: TaskDetailProps) {
       )) ||
         (task && !isEditing && (
           <div className="flex flex-col gap-5">
+            {deleteState.code && deleteState.message && (
+              <p className="text-red-500">{`コード：${deleteState.code}、メッセージ：${deleteState.message}`}</p>
+            )}
             <Row title="タイトル" content={task.title} />
             <Row title="詳細" content={task.description} />
             <Row title="ステータス" content={task.status} />
@@ -110,7 +131,7 @@ export default function TaskDetail({ id }: TaskDetailProps) {
               <Button color="secondary" onClick={() => setIsEditing((prevState) => !prevState)}>
                 編集
               </Button>
-              <Button color="danger" onClick={() => deleteTask(task.id)}>
+              <Button color="danger" onClick={() => handleDelete(task.id)} isDisabled={deletePending}>
                 削除
               </Button>
             </div>
