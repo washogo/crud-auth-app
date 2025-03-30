@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
 
 /** サインイン処理 */
-export async function signin(formData: FormData) {
+export async function signin(_: { status?: number; message: string }, formData: FormData) {
   const supabase = await createClient();
 
   const data = {
@@ -15,9 +15,10 @@ export async function signin(formData: FormData) {
   };
 
   const { error } = await supabase.auth.signInWithPassword(data);
+  console.error(error);
 
   if (error) {
-    redirect('/error');
+    return { status: error.status, message: error.message };
   }
 
   revalidatePath('/', 'layout');

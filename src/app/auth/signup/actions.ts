@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
 
 /** サインアップ処理 */
-export async function signup(formData: FormData) {
+export async function signup(_: { status?: number; message: string }, formData: FormData) {
   const supabase = await createClient();
 
   const data = {
@@ -18,7 +18,7 @@ export async function signup(formData: FormData) {
   console.error(error);
 
   if (error) {
-    redirect('/error');
+    return { status: error.status, message: error.message };
   }
 
   revalidatePath('/', 'layout');

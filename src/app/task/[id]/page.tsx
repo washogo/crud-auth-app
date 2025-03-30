@@ -1,5 +1,5 @@
 import PageTitle from '@/components/PageTitle';
-import TaskDetail from '@/components/TaskDetail';
+import TaskDetail from '@/features/task/detail/TaskDetail';
 
 // タスク詳細画面
 export default async function TaskDetailPage({ params }: { params: Promise<{ id: string }> }) {

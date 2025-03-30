@@ -1,5 +1,5 @@
 import PageTitle from '@/components/PageTitle';
-import Tasks from '@/components/Tasks';
+import Tasks from '@/features/task/list/Tasks';
 
 // タスク一覧画面
 export default function TasksPage() {
